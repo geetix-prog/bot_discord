@@ -181,24 +181,41 @@
 
 <body>
     <!-- Navigation -->
-    <nav class="navbar">
+    <nav class="navbar" role="navigation" aria-label="Navigation principale">
         <div class="nav-container">
             <div class="nav-logo">
-                <i class="fab fa-discord"></i>
+                <i class="fab fa-discord" aria-hidden="true"></i>
                 <span>ProjectBot</span>
             </div>
-            <ul class="nav-menu">
-                <li><a href="#home">Accueil</a></li>
-                <li><a href="#features">Fonctionnalités</a></li>
-                <li><a href="#commands">Commandes</a></li>
-                <li><a href="#demo">Démo</a></li>
-                <li><a href="#support">Support</a></li>
+            
+            <button class="hamburger" 
+                    aria-label="Menu de navigation" 
+                    aria-expanded="false" 
+                    aria-controls="nav-menu"
+                    type="button">
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+            </button>
+            
+            <ul class="nav-menu" id="nav-menu" role="menu">
+                <li role="none"><a href="#home" role="menuitem">Accueil</a></li>
+                <li role="none"><a href="#features" role="menuitem">Fonctionnalités</a></li>
+                <li role="none"><a href="#commands" role="menuitem">Commandes</a></li>
+                <li role="none"><a href="#demo" role="menuitem">Démo</a></li>
+                <li role="none"><a href="#support" role="menuitem">Support</a></li>
+                <li role="none">
+                    <a href="https://discord.com/oauth2/authorize?client_id=1397985672723435630&permissions=8&scope=bot+applications.commands" 
+                       class="btn btn-primary nav-cta" 
+                       role="menuitem"
+                       rel="noopener noreferrer"
+                       target="_blank"
+                       aria-label="Ajouter ProjectBot à votre serveur Discord">
+                        <i class="fab fa-discord" aria-hidden="true"></i>
+                        Ajouter le Bot
+                    </a>
+                </li>
             </ul>
-            <div class="hamburger">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
         </div>
     </nav>
 
