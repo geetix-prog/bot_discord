@@ -1,511 +1,715 @@
-// Advanced JavaScript for ProjectBot website
-document.addEventListener('DOMContentLoaded', function() {
-    // Enhanced mobile menu with animations
-    const hamburger = document.querySelector('.hamburger');
-    const navMenu = document.querySelector('.nav-menu');
-    const navbar = document.querySelector('.navbar');
-    
-    if (hamburger && navMenu) {
-        hamburger.addEventListener('click', function() {
-            hamburger.classList.toggle('active');
-            navMenu.classList.toggle('active');
-            document.body.style.overflow = navMenu.classList.contains('active') ? 'hidden' : 'auto';
-        });
+// Enhanced ProjectBot Website JavaScript - Performance Optimized
+class ProjectBotApp {
+    constructor() {
+        this.isLoaded = false;
+        this.observers = new Map();
+        this.initializeApp();
+    }
+
+    initializeApp() {
+        // Set loading state
+        document.body.classList.add('loading');
         
-        // Close mobile menu when clicking on a link
-        document.querySelectorAll('.nav-menu a').forEach(link => {
+        // Initialize components when DOM is ready
+        this.setupEventListeners();
+        this.setupIntersectionObserver();
+        this.setupSmoothScrolling();
+        this.setupAccessibility();
+        
+        // Remove loading state after everything is ready
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.body.classList.remove('loading');
+                document.body.classList.add('loaded');
+                this.triggerInitialAnimations();
+                this.isLoaded = true;
+            }, 300);
+        });
+    }
+
+    setupEventListeners() {
+        this.setupMobileMenu();
+        this.setupNavbarScroll();
+        this.setupCommandCopying();
+        this.setupMouseTrail();
+        this.setupScrollProgress();
+        this.setupResizeHandler();
+        this.setupKeyboardNavigation();
+    }
+
+    setupMobileMenu() {
+        const hamburger = document.querySelector('.hamburger');
+        const navMenu = document.querySelector('.nav-menu');
+        const navLinks = document.querySelectorAll('.nav-menu a');
+
+        if (!hamburger || !navMenu) return;
+
+        // Toggle menu
+        hamburger.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const isOpen = hamburger.classList.contains('active');
+            
+            if (isOpen) {
+                this.closeMobileMenu();
+            } else {
+                this.openMobileMenu();
+            }
+        });
+
+        // Close menu when clicking nav links
+        navLinks.forEach(link => {
             link.addEventListener('click', () => {
-                hamburger.classList.remove('active');
-                navMenu.classList.remove('active');
-                document.body.style.overflow = 'auto';
+                if (hamburger.classList.contains('active')) {
+                    this.closeMobileMenu();
+                }
             });
         });
-        
+
         // Close menu when clicking outside
         document.addEventListener('click', (e) => {
-            if (!hamburger.contains(e.target) && !navMenu.contains(e.target)) {
-                hamburger.classList.remove('active');
-                navMenu.classList.remove('active');
-                document.body.style.overflow = 'auto';
+            if (hamburger.classList.contains('active') && 
+                !navMenu.contains(e.target) && 
+                !hamburger.contains(e.target)) {
+                this.closeMobileMenu();
+            }
+        });
+
+        // Close menu on escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && hamburger.classList.contains('active')) {
+                this.closeMobileMenu();
             }
         });
     }
-    
-    // Advanced navbar scroll effect
-    let lastScrollTop = 0;
-    
-    window.addEventListener('scroll', function() {
-        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+    openMobileMenu() {
+        const hamburger = document.querySelector('.hamburger');
+        const navMenu = document.querySelector('.nav-menu');
+        const navLinks = document.querySelectorAll('.nav-menu li');
         
-        if (scrollTop > 100) {
-            navbar.classList.add('scrolled');
-            
-            // Hide/show navbar on scroll direction
-            if (scrollTop > lastScrollTop && scrollTop > 200) {
-                navbar.style.transform = 'translateY(-100%)';
-            } else {
-                navbar.style.transform = 'translateY(0)';
-            }
-        } else {
-            navbar.classList.remove('scrolled');
-            navbar.style.transform = 'translateY(0)';
+        hamburger.classList.add('active');
+        hamburger.setAttribute('aria-expanded', 'true');
+        navMenu.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        
+        // Add backdrop
+        const backdrop = document.createElement('div');
+        backdrop.className = 'menu-backdrop';
+        backdrop.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            z-index: 998;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        `;
+        document.body.appendChild(backdrop);
+        
+        // Animate backdrop
+        requestAnimationFrame(() => {
+            backdrop.style.opacity = '1';
+        });
+        
+        // Staggered animation for menu items
+        navLinks.forEach((link, index) => {
+            link.style.animation = `slideInFromRight 0.5s ease forwards ${index * 0.1}s`;
+        });
+        
+        // Focus management
+        const firstLink = navMenu.querySelector('a');
+        if (firstLink) firstLink.focus();
+    }
+
+    closeMobileMenu() {
+        const hamburger = document.querySelector('.hamburger');
+        const navMenu = document.querySelector('.nav-menu');
+        const backdrop = document.querySelector('.menu-backdrop');
+        
+        hamburger.classList.remove('active');
+        hamburger.setAttribute('aria-expanded', 'false');
+        navMenu.classList.remove('active');
+        document.body.style.overflow = '';
+        
+        // Remove backdrop
+        if (backdrop) {
+            backdrop.style.opacity = '0';
+            setTimeout(() => backdrop.remove(), 300);
         }
         
-        lastScrollTop = scrollTop;
-    });
-    
-    // Smooth scrolling with offset for fixed navbar
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
-            if (target) {
-                const headerOffset = 100;
-                const elementPosition = target.getBoundingClientRect().top;
-                const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+        // Return focus to hamburger button
+        hamburger.focus();
+    }
+
+    setupNavbarScroll() {
+        const navbar = document.querySelector('.navbar');
+        let lastScrollY = window.scrollY;
+        let ticking = false;
+        
+        const updateNavbar = () => {
+            const scrollY = window.scrollY;
+            const scrolled = scrollY > 50;
+            const scrollingDown = scrollY > lastScrollY;
+            
+            navbar.classList.toggle('scrolled', scrolled);
+            
+            // Hide navbar when scrolling down, show when scrolling up
+            if (scrollY > 200) {
+                navbar.classList.toggle('hidden', scrollingDown);
+            } else {
+                navbar.classList.remove('hidden');
+            }
+            
+            lastScrollY = scrollY;
+            ticking = false;
+        };
+
+        window.addEventListener('scroll', () => {
+            if (!ticking) {
+                requestAnimationFrame(updateNavbar);
+                ticking = true;
+            }
+        }, { passive: true });
+    }
+
+    setupCommandCopying() {
+        const commandItems = document.querySelectorAll('.command-item');
+        
+        commandItems.forEach(item => {
+            const button = document.createElement('button');
+            button.className = 'copy-btn';
+            button.innerHTML = '<i class="fas fa-copy" aria-hidden="true"></i>';
+            button.setAttribute('aria-label', 'Copier la commande');
+            button.setAttribute('title', 'Copier');
+            button.type = 'button';
+            
+            item.appendChild(button);
+            
+            button.addEventListener('click', async (e) => {
+                e.preventDefault();
+                e.stopPropagation();
                 
-                window.scrollTo({
-                    top: offsetPosition,
-                    behavior: 'smooth'
-                });
-            }
-        });
-    });
-    
-    // Advanced intersection observer for animations
-    const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -100px 0px'
-    };
-    
-    const observer = new IntersectionObserver(function(entries) {
-        entries.forEach((entry, index) => {
-            if (entry.isIntersecting) {
-                // Add stagger delay for multiple elements
-                setTimeout(() => {
-                    entry.target.classList.add('visible');
-                    entry.target.style.animationDelay = '0s';
-                    entry.target.style.animationFillMode = 'both';
-                }, index * 100);
-            }
-        });
-    }, observerOptions);
-    
-    // Observe elements for scroll animations
-    document.querySelectorAll('.feature-card, .command-category, .support-card').forEach((el, index) => {
-        el.classList.add('animate-on-scroll');
-        el.style.animationDelay = `${index * 0.1}s`;
-        observer.observe(el);
-    });
-    
-    // Enhanced video placeholder interaction
-    const videoPlaceholder = document.querySelector('.video-placeholder');
-    if (videoPlaceholder) {
-        videoPlaceholder.addEventListener('click', function() {
-            // Create modal overlay
-            const modal = document.createElement('div');
-            modal.style.cssText = `
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0, 0, 0, 0.9);
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                z-index: 10000;
-                backdrop-filter: blur(10px);
-                opacity: 0;
-                transition: opacity 0.3s ease;
-            `;
-            
-            const content = document.createElement('div');
-            content.innerHTML = `
-                <div style="
-                    background: linear-gradient(145deg, #2c2f36, #23272a);
-                    padding: 3rem;
-                    border-radius: 20px;
-                    text-align: center;
-                    border: 1px solid rgba(88, 101, 242, 0.3);
-                    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
-                    max-width: 500px;
-                    margin: 0 20px;
-                ">
-                    <h3 style="color: #ffffff; margin-bottom: 1rem; font-size: 1.5rem;">🎬 Démo Interactive</h3>
-                    <p style="color: #b9bbbe; margin-bottom: 2rem; line-height: 1.6;">
-                        La vidéo de démonstration sera bientôt disponible ! 
-                        En attendant, essayez ProjectBot directement sur votre serveur Discord.
-                    </p>
-                    <button onclick="this.closest('[style*=\"position: fixed\"]').remove()" style="
-                        background: linear-gradient(135deg, #5865F2, #9c88ff);
-                        color: white;
-                        border: none;
-                        padding: 12px 24px;
-                        border-radius: 8px;
-                        cursor: pointer;
-                        font-weight: 600;
-                        transition: all 0.3s ease;
-                    ">Fermer</button>
-                </div>
-            `;
-            
-            modal.appendChild(content);
-            document.body.appendChild(modal);
-            
-            // Fade in animation
-            setTimeout(() => modal.style.opacity = '1', 10);
-            
-            // Close on backdrop click
-            modal.addEventListener('click', (e) => {
-                if (e.target === modal) {
-                    modal.style.opacity = '0';
-                    setTimeout(() => modal.remove(), 300);
+                const codeElement = item.querySelector('code');
+                if (!codeElement) return;
+                
+                const command = codeElement.textContent.trim();
+                
+                try {
+                    await navigator.clipboard.writeText(command);
+                    this.showCopyFeedback(button, 'Copié !', 'success');
+                    this.announceToScreenReader('Commande copiée dans le presse-papiers');
+                } catch (err) {
+                    // Fallback for older browsers
+                    this.fallbackCopyText(command);
+                    this.showCopyFeedback(button, 'Copié !', 'success');
+                    this.announceToScreenReader('Commande copiée dans le presse-papiers');
                 }
             });
         });
     }
-    
-    // Interactive command copying with advanced feedback
-    document.querySelectorAll('.command-item code').forEach(code => {
-        // Add copy icon
-        const copyIcon = document.createElement('span');
-        copyIcon.innerHTML = '📋';
-        copyIcon.style.cssText = `
-            position: absolute;
-            top: 8px;
-            right: 8px;
-            cursor: pointer;
-            opacity: 0.6;
-            transition: opacity 0.3s ease;
-            background: rgba(0, 0, 0, 0.3);
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 0.8rem;
-        `;
+
+    fallbackCopyText(text) {
+        const textArea = document.createElement('textarea');
+        textArea.value = text;
+        textArea.style.position = 'fixed';
+        textArea.style.left = '-999999px';
+        textArea.style.top = '-999999px';
+        textArea.setAttribute('readonly', '');
+        textArea.setAttribute('aria-hidden', 'true');
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
         
-        code.style.position = 'relative';
-        code.appendChild(copyIcon);
-        
-        const copyFunction = async () => {
-            const text = code.textContent.replace('📋', '').replace('$ ', '').trim();
-            
-            try {
-                await navigator.clipboard.writeText(text);
-                
-                // Success animation
-                copyIcon.innerHTML = '✅';
-                code.style.background = 'linear-gradient(145deg, #57f287, #43b581)';
-                code.style.color = '#1a1d21';
-                code.style.transform = 'scale(1.02)';
-                
-                // Create floating notification
-                const notification = document.createElement('div');
-                notification.innerHTML = `✨ Commande copiée !`;
-                notification.style.cssText = `
-                    position: fixed;
-                    top: 20px;
-                    right: 20px;
-                    background: linear-gradient(135deg, #57f287, #43b581);
-                    color: #1a1d21;
-                    padding: 12px 20px;
-                    border-radius: 8px;
-                    font-weight: 600;
-                    z-index: 10000;
-                    animation: slideInRight 0.3s ease, fadeOut 0.3s ease 2s forwards;
-                    box-shadow: 0 5px 15px rgba(87, 242, 135, 0.3);
-                `;
-                
-                document.body.appendChild(notification);
-                setTimeout(() => notification.remove(), 2500);
-                
-                // Reset after delay
-                setTimeout(() => {
-                    copyIcon.innerHTML = '📋';
-                    code.style.background = '';
-                    code.style.color = '';
-                    code.style.transform = '';
-                }, 1500);
-                
-            } catch (err) {
-                console.error('Could not copy text: ', err);
-                copyIcon.innerHTML = '❌';
-                setTimeout(() => copyIcon.innerHTML = '📋', 1000);
+        try {
+            const successful = document.execCommand('copy');
+            if (!successful) {
+                throw new Error('Fallback copy failed');
             }
-        };
-        
-        code.addEventListener('click', copyFunction);
-        copyIcon.addEventListener('click', (e) => {
-            e.stopPropagation();
-            copyFunction();
-        });
-        
-        code.title = 'Cliquer pour copier la commande';
-    });
-    
-    // Advanced Discord invite tracking with analytics
-    document.querySelectorAll('a[href*="discord.com/oauth2/authorize"]').forEach(link => {
-        link.addEventListener('click', function(e) {
-            // Add loading state
-            const originalText = this.innerHTML;
-            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Redirection vers Discord...';
-            this.style.pointerEvents = 'none';
-            
-            // Track conversion (you can integrate with analytics here)
-            console.log('Discord invite clicked from:', window.location.href);
-            
-            // Reset after delay
-            setTimeout(() => {
-                this.innerHTML = originalText;
-                this.style.pointerEvents = 'auto';
-            }, 3000);
-        });
-    });
-    
-    // Parallax effects for enhanced visual experience
-    let ticking = false;
-    
-    function updateParallax() {
-        const scrolled = window.pageYOffset;
-        const parallaxElements = document.querySelectorAll('.hero, .discord-mockup');
-        
-        parallaxElements.forEach((element, index) => {
-            const speed = 0.5 + (index * 0.1);
-            const yPos = -(scrolled * speed);
-            element.style.transform = `translateY(${yPos}px)`;
-        });
-        
-        ticking = false;
-    }
-    
-    function requestParallaxUpdate() {
-        if (!ticking) {
-            requestAnimationFrame(updateParallax);
-            ticking = true;
-        }
-    }
-    
-    window.addEventListener('scroll', requestParallaxUpdate);
-    
-    // Enhanced hover effects for cards
-    document.querySelectorAll('.feature-card, .support-card').forEach(card => {
-        card.addEventListener('mouseenter', function(e) {
-            const rect = this.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            
-            // Create ripple effect
-            const ripple = document.createElement('div');
-            ripple.style.cssText = `
-                position: absolute;
-                top: ${y}px;
-                left: ${x}px;
-                width: 0;
-                height: 0;
-                border-radius: 50%;
-                background: radial-gradient(circle, rgba(88, 101, 242, 0.3) 0%, transparent 70%);
-                pointer-events: none;
-                animation: ripple 0.6s ease-out;
-            `;
-            
-            this.style.position = 'relative';
-            this.appendChild(ripple);
-            
-            setTimeout(() => ripple.remove(), 600);
-        });
-    });
-    
-    // Konami code easter egg with enhanced effects
-    let konamiCode = [];
-    const konamiSequence = [
-        'ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown',
-        'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight',
-        'KeyB', 'KeyA'
-    ];
-    
-    document.addEventListener('keydown', function(e) {
-        konamiCode.push(e.code);
-        if (konamiCode.length > konamiSequence.length) {
-            konamiCode.shift();
+        } catch (err) {
+            console.error('Copy operation failed:', err);
         }
         
-        if (JSON.stringify(konamiCode) === JSON.stringify(konamiSequence)) {
-            // Epic easter egg activation
-            document.body.style.animation = 'rainbow 2s ease-in-out';
-            
-            // Create celebration particles
-            for (let i = 0; i < 50; i++) {
-                setTimeout(() => {
-                    const particle = document.createElement('div');
-                    particle.innerHTML = ['🎉', '✨', '🚀', '🎊', '⭐'][Math.floor(Math.random() * 5)];
-                    particle.style.cssText = `
-                        position: fixed;
-                        top: ${Math.random() * 100}vh;
-                        left: ${Math.random() * 100}vw;
-                        font-size: 2rem;
-                        pointer-events: none;
-                        z-index: 10000;
-                        animation: float 3s ease-out forwards;
-                    `;
-                    
-                    document.body.appendChild(particle);
-                    setTimeout(() => particle.remove(), 3000);
-                }, i * 50);
+        document.body.removeChild(textArea);
+    }
+
+    showCopyFeedback(button, message, type) {
+        const originalHTML = button.innerHTML;
+        const originalClass = button.className;
+        
+        button.innerHTML = type === 'success' ? 
+            '<i class="fas fa-check" aria-hidden="true"></i>' : 
+            '<i class="fas fa-times" aria-hidden="true"></i>';
+        button.classList.add(`copy-${type}`);
+        button.setAttribute('title', message);
+        
+        // Create floating notification
+        const notification = document.createElement('div');
+        notification.className = `copy-notification ${type}`;
+        notification.textContent = message;
+        notification.setAttribute('aria-hidden', 'true');
+        button.appendChild(notification);
+        
+        setTimeout(() => {
+            button.innerHTML = originalHTML;
+            button.className = originalClass;
+            button.setAttribute('title', 'Copier');
+            if (notification.parentNode) {
+                notification.remove();
             }
-            
-            // Reset
-            setTimeout(() => {
-                document.body.style.animation = '';
-            }, 2000);
-            
-            konamiCode = [];
-        }
-    });
-    
-    // Advanced performance optimizations
-    const debouncedScrollHandler = debounce(function() {
-        // Additional optimized scroll handlers
-        updateScrollProgress();
-    }, 16); // 60fps
-    
-    function debounce(func, wait) {
-        let timeout;
-        return function executedFunction(...args) {
-            const later = () => {
-                clearTimeout(timeout);
-                func(...args);
-            };
-            clearTimeout(timeout);
-            timeout = setTimeout(later, wait);
-        };
+        }, 2000);
     }
-    
-    // Scroll progress indicator
-    function updateScrollProgress() {
-        const scrollProgress = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
-        
-        // Update progress bar if it exists
-        let progressBar = document.querySelector('.scroll-progress');
-        if (!progressBar) {
-            progressBar = document.createElement('div');
-            progressBar.className = 'scroll-progress';
-            progressBar.style.cssText = `
+
+    setupMouseTrail() {
+        // Only enable on desktop and if user allows motion
+        if (window.innerWidth < 768 || 
+            window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
+            'ontouchstart' in window) {
+            return;
+        }
+
+        const trail = [];
+        const trailLength = 6;
+        let mouseX = 0, mouseY = 0;
+        let animationId;
+
+        // Create trail elements
+        for (let i = 0; i < trailLength; i++) {
+            const dot = document.createElement('div');
+            dot.className = 'mouse-trail';
+            dot.setAttribute('aria-hidden', 'true');
+            dot.style.cssText = `
                 position: fixed;
-                top: 0;
-                left: 0;
-                height: 3px;
-                background: linear-gradient(90deg, #5865F2, #9c88ff, #00d4ff);
-                z-index: 10000;
-                transition: width 0.1s ease;
+                width: ${4 - i * 0.3}px;
+                height: ${4 - i * 0.3}px;
+                background: rgba(88, 101, 242, ${0.6 - i * 0.1});
+                border-radius: 50%;
+                pointer-events: none;
+                z-index: 9999;
+                transition: all 0.1s ease;
+                transform: translate(-50%, -50%);
             `;
-            document.body.appendChild(progressBar);
+            document.body.appendChild(dot);
+            trail.push({ element: dot, x: 0, y: 0 });
         }
-        
-        progressBar.style.width = `${scrollProgress}%`;
-    }
-    
-    window.addEventListener('scroll', debouncedScrollHandler);
-    
-    // Initialize scroll progress
-    updateScrollProgress();
-    
-    // Mouse trail effect (optional, can be performance intensive)
-    if (window.innerWidth > 768) { // Only on desktop
-        let mouseTrail = [];
-        
-        document.addEventListener('mousemove', function(e) {
-            mouseTrail.push({ x: e.clientX, y: e.clientY, time: Date.now() });
+
+        // Throttled mouse move handler
+        let lastTime = 0;
+        const handleMouseMove = (e) => {
+            const now = Date.now();
+            if (now - lastTime < 16) return; // ~60fps limit
             
-            // Limit trail length
-            if (mouseTrail.length > 10) {
-                mouseTrail.shift();
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            lastTime = now;
+        };
+
+        document.addEventListener('mousemove', handleMouseMove, { passive: true });
+
+        // Animation loop
+        const animate = () => {
+            // Update trail positions
+            for (let i = trail.length - 1; i > 0; i--) {
+                trail[i].x += (trail[i - 1].x - trail[i].x) * 0.3;
+                trail[i].y += (trail[i - 1].y - trail[i].y) * 0.3;
             }
             
-            // Create trail effect
-            if (Math.random() < 0.1) { // Reduce frequency for performance
-                const trail = document.createElement('div');
-                trail.style.cssText = `
-                    position: fixed;
-                    top: ${e.clientY}px;
-                    left: ${e.clientX}px;
-                    width: 4px;
-                    height: 4px;
-                    background: radial-gradient(circle, rgba(88, 101, 242, 0.6) 0%, transparent 70%);
-                    border-radius: 50%;
-                    pointer-events: none;
-                    z-index: 9999;
-                    animation: fadeOut 1s ease-out forwards;
-                `;
+            trail[0].x += (mouseX - trail[0].x) * 0.7;
+            trail[0].y += (mouseY - trail[0].y) * 0.7;
+            
+            // Apply positions to elements
+            trail.forEach(dot => {
+                dot.element.style.left = dot.x + 'px';
+                dot.element.style.top = dot.y + 'px';
+            });
+            
+            animationId = requestAnimationFrame(animate);
+        };
+
+        animate();
+
+        // Clean up on page unload
+        window.addEventListener('beforeunload', () => {
+            cancelAnimationFrame(animationId);
+            document.removeEventListener('mousemove', handleMouseMove);
+            trail.forEach(dot => dot.element.remove());
+        });
+    }
+
+    setupScrollProgress() {
+        const progressBar = document.querySelector('.scroll-progress');
+        if (!progressBar) return;
+
+        let ticking = false;
+        
+        const updateProgress = () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = Math.min((winScroll / height) * 100, 100);
+            
+            progressBar.style.width = scrolled + '%';
+            progressBar.setAttribute('aria-valuenow', Math.round(scrolled));
+            
+            ticking = false;
+        };
+
+        window.addEventListener('scroll', () => {
+            if (!ticking) {
+                requestAnimationFrame(updateProgress);
+                ticking = true;
+            }
+        }, { passive: true });
+    }
+
+    setupIntersectionObserver() {
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    // Unobserve after animation for performance
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        // Observe elements with staggered delays
+        const animatedElements = document.querySelectorAll('.animate-on-scroll');
+        animatedElements.forEach((el, index) => {
+            el.style.transitionDelay = `${index * 0.1}s`;
+            observer.observe(el);
+        });
+
+        this.observers.set('animation', observer);
+    }
+
+    setupSmoothScrolling() {
+        // Enhanced smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = anchor.getAttribute('href').substring(1);
+                const target = document.getElementById(targetId);
                 
-                document.body.appendChild(trail);
-                setTimeout(() => trail.remove(), 1000);
+                if (target) {
+                    const offsetTop = target.offsetTop - 80; // Account for fixed navbar
+                    
+                    window.scrollTo({
+                        top: offsetTop,
+                        behavior: 'smooth'
+                    });
+                    
+                    // Update URL without triggering scroll
+                    history.pushState(null, null, `#${targetId}`);
+                    
+                    // Focus management for accessibility
+                    target.setAttribute('tabindex', '-1');
+                    target.focus({ preventScroll: true });
+                    
+                    // Remove tabindex after focus
+                    setTimeout(() => {
+                        target.removeAttribute('tabindex');
+                    }, 1000);
+                }
+            });
+        });
+    }
+
+    setupAccessibility() {
+        // Add ARIA live region for dynamic content
+        const liveRegion = document.createElement('div');
+        liveRegion.setAttribute('aria-live', 'polite');
+        liveRegion.setAttribute('aria-atomic', 'true');
+        liveRegion.className = 'sr-only';
+        liveRegion.id = 'live-region';
+        document.body.appendChild(liveRegion);
+
+        // Enhanced keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            // Handle escape key globally
+            if (e.key === 'Escape') {
+                // Close any open overlays
+                const activeMenu = document.querySelector('.hamburger.active');
+                if (activeMenu) {
+                    this.closeMobileMenu();
+                }
+            }
+        });
+
+        // Improve focus visibility
+        let mouseUser = false;
+        
+        document.addEventListener('mousedown', () => {
+            mouseUser = true;
+        });
+        
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Tab') {
+                mouseUser = false;
+            }
+        });
+        
+        document.addEventListener('focusin', (e) => {
+            if (!mouseUser) {
+                e.target.classList.add('keyboard-focused');
+            }
+        });
+
+        document.addEventListener('focusout', (e) => {
+            e.target.classList.remove('keyboard-focused');
+        });
+    }
+
+    setupResizeHandler() {
+        let resizeTimer;
+        
+        const handleResize = () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => {
+                this.handleResize();
+            }, 150);
+        };
+        
+        window.addEventListener('resize', handleResize);
+    }
+
+    setupKeyboardNavigation() {
+        // Enhanced keyboard navigation for interactive elements
+        const focusableSelector = 'a[href], button:not([disabled]), input:not([disabled]), textarea:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
+        
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Tab') {
+                const focusable = Array.from(document.querySelectorAll(focusableSelector))
+                    .filter(el => el.offsetParent !== null); // Only visible elements
+                
+                const firstFocusable = focusable[0];
+                const lastFocusable = focusable[focusable.length - 1];
+                
+                if (e.shiftKey) {
+                    if (document.activeElement === firstFocusable) {
+                        e.preventDefault();
+                        lastFocusable.focus();
+                    }
+                } else {
+                    if (document.activeElement === lastFocusable) {
+                        e.preventDefault();
+                        firstFocusable.focus();
+                    }
+                }
             }
         });
     }
-});
 
-// Add CSS animations
-const additionalStyles = `
-@keyframes slideInRight {
-    from { transform: translateX(100%); opacity: 0; }
-    to { transform: translateX(0); opacity: 1; }
+    handleResize() {
+        // Handle responsive layout changes
+        const mobileBreakpoint = 768;
+        const isMobile = window.innerWidth < mobileBreakpoint;
+        
+        // Close mobile menu on resize to desktop
+        if (!isMobile && document.querySelector('.hamburger.active')) {
+            this.closeMobileMenu();
+        }
+        
+        // Reinitialize mouse trail if needed
+        const existingTrail = document.querySelectorAll('.mouse-trail');
+        if (existingTrail.length > 0 && (isMobile || window.matchMedia('(prefers-reduced-motion: reduce)').matches)) {
+            existingTrail.forEach(dot => dot.remove());
+        } else if (existingTrail.length === 0 && !isMobile && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            this.setupMouseTrail();
+        }
+    }
+
+    triggerInitialAnimations() {
+        // Trigger hero section animations
+        const heroElements = document.querySelectorAll('.hero-title, .hero-description, .hero-buttons');
+        heroElements.forEach((el, index) => {
+            setTimeout(() => {
+                el.style.opacity = '1';
+                el.style.transform = 'translateY(0)';
+            }, index * 200);
+        });
+    }
+
+    // Public method to announce messages to screen readers
+    announceToScreenReader(message) {
+        const liveRegion = document.getElementById('live-region');
+        if (liveRegion) {
+            liveRegion.textContent = message;
+            setTimeout(() => {
+                liveRegion.textContent = '';
+            }, 1000);
+        }
+    }
+
+    // Cleanup method
+    destroy() {
+        // Clean up observers
+        this.observers.forEach(observer => observer.disconnect());
+        this.observers.clear();
+        
+        // Remove event listeners and elements
+        const trailElements = document.querySelectorAll('.mouse-trail');
+        trailElements.forEach(el => el.remove());
+        
+        const liveRegion = document.getElementById('live-region');
+        if (liveRegion) liveRegion.remove();
+        
+        const backdrop = document.querySelector('.menu-backdrop');
+        if (backdrop) backdrop.remove();
+    }
 }
 
-@keyframes fadeOut {
-    to { opacity: 0; transform: translateY(-20px); }
-}
-
-@keyframes ripple {
-    to { width: 200px; height: 200px; opacity: 0; }
-}
-
-@keyframes rainbow {
-    0% { filter: hue-rotate(0deg); }
-    100% { filter: hue-rotate(360deg); }
-}
-
-.animate-on-scroll {
-    opacity: 0;
-    transform: translateY(50px);
-    transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
-
-.animate-on-scroll.visible {
-    opacity: 1;
-    transform: translateY(0);
-}
+// Enhanced CSS animations and styles
+const enhancedStyles = `
+    /* Enhanced animations */
+    @keyframes slideInFromRight {
+        from {
+            opacity: 0;
+            transform: translateX(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+    
+    @keyframes copyFeedback {
+        0% { opacity: 0; transform: translateX(-50%) translateY(10px); }
+        20%, 80% { opacity: 1; transform: translateX(-50%) translateY(0); }
+        100% { opacity: 0; transform: translateX(-50%) translateY(-10px); }
+    }
+    
+    /* Copy notification */
+    .copy-notification {
+        position: absolute;
+        top: -35px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: var(--discord-green, #00d26a);
+        color: white;
+        padding: 6px 12px;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: 500;
+        white-space: nowrap;
+        z-index: 1000;
+        animation: copyFeedback 2s ease forwards;
+        pointer-events: none;
+    }
+    
+    .copy-notification.error {
+        background: #ed4245;
+    }
+    
+    /* Enhanced copy button states */
+    .copy-btn.copy-success {
+        background: var(--discord-green, #00d26a) !important;
+        color: white !important;
+    }
+    
+    .copy-btn.copy-error {
+        background: #ed4245 !important;
+        color: white !important;
+    }
+    
+    /* Screen reader only content */
+    .sr-only {
+        position: absolute !important;
+        width: 1px !important;
+        height: 1px !important;
+        padding: 0 !important;
+        margin: -1px !important;
+        overflow: hidden !important;
+        clip: rect(0, 0, 0, 0) !important;
+        white-space: nowrap !important;
+        border: 0 !important;
+    }
+    
+    /* Enhanced focus styles */
+    .keyboard-focused {
+        outline: 3px solid var(--discord-primary) !important;
+        outline-offset: 2px !important;
+        border-radius: 4px !important;
+    }
+    
+    /* Improved navbar transitions */
+    .navbar {
+        transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), 
+                    background-color 0.3s ease,
+                    backdrop-filter 0.3s ease !important;
+    }
+    
+    .navbar.hidden {
+        transform: translateY(-100%) !important;
+    }
+    
+    /* Loading state improvements */
+    body.loading .hero-title,
+    body.loading .hero-description,
+    body.loading .hero-buttons {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    
+    body.loaded .hero-title,
+    body.loaded .hero-description,
+    body.loaded .hero-buttons {
+        transition: opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                   transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    
+    /* Mobile menu backdrop */
+    .menu-backdrop {
+        transition: opacity 0.3s ease !important;
+    }
+    
+    /* Reduced motion support */
+    @media (prefers-reduced-motion: reduce) {
+        * {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+        }
+        
+        .mouse-trail {
+            display: none !important;
+        }
+    }
+    
+    /* High contrast mode support */
+    @media (prefers-contrast: high) {
+        .copy-notification {
+            border: 2px solid white;
+        }
+        
+        .keyboard-focused {
+            outline-width: 4px !important;
+        }
+    }
 `;
 
-const styleSheet = document.createElement('style');
-styleSheet.textContent = additionalStyles;
-document.head.appendChild(styleSheet);
+// Initialize the app when DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+    // Inject enhanced styles
+    const styleSheet = document.createElement('style');
+    styleSheet.textContent = enhancedStyles;
+    document.head.appendChild(styleSheet);
+    
+    // Initialize the app
+    window.projectBotApp = new ProjectBotApp();
+});
 
-// Console branding
-console.log(`
-%c🚀 ProjectBot Website
-%cDeveloped with ❤️ for the Discord community
-%c
-• Built with modern web technologies
-• Optimized for performance and accessibility  
-• Designed for an exceptional user experience
-%c
-Want to contribute? Check out our GitHub!
-`, 
-'color: #5865F2; font-size: 20px; font-weight: bold;',
-'color: #9c88ff; font-size: 14px;',
-'color: #b9bbbe; font-size: 12px;',
-'color: #00d4ff; font-size: 12px; font-style: italic;'
-);
-
-// Service Worker registration for PWA
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', function() {
-        navigator.serviceWorker.register('/sw.js')
-            .then(function(registration) {
-                console.log('✅ ServiceWorker registration successful');
-            })
-            .catch(function(err) {
-                console.log('❌ ServiceWorker registration failed');
-            });
-    });
-}
+// Handle page unload
+window.addEventListener('beforeunload', () => {
+    if (window.projectBotApp) {
+        window.projectBotApp.destroy();
+    }
+});
