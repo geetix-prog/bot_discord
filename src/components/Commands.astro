@@ -1,0 +1,295 @@
+---
+// Commands section component for ProjectBot
+---
+
+<section id="commandes" class="py-20 bg-gray-800/30">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Section header -->
+    <div class="text-center mb-16">
+      <h2 class="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-green-400 to-blue-400 bg-clip-text text-transparent">
+        Commandes Disponibles
+      </h2>
+      <p class="text-xl text-gray-400 max-w-3xl mx-auto">
+        Découvrez toutes les commandes pour gérer vos projets directement depuis Discord
+      </p>
+    </div>
+
+    <!-- Commands categories -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+      <!-- Project Management Commands -->
+      <div class="space-y-6">
+        <h3 class="text-2xl font-bold text-white mb-6 flex items-center">
+          <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center mr-3">
+            <i class="fas fa-project-diagram text-white text-sm"></i>
+          </div>
+          Gestion de Projets
+        </h3>
+        
+        <div class="space-y-4">
+          <div class="bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg p-4 hover:bg-white/10 transition-all duration-300 group">
+            <div class="flex items-center justify-between mb-2">
+              <code class="text-green-400 font-mono text-sm bg-gray-800/50 px-3 py-1 rounded">/project create</code>
+              <button class="copy-btn opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-gray-400 hover:text-white" data-command="/project create [nom] [description]">
+                <i class="fas fa-copy"></i>
+              </button>
+            </div>
+            <p class="text-gray-400 text-sm">Créer un nouveau projet avec un nom et une description</p>
+          </div>
+
+          <div class="bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg p-4 hover:bg-white/10 transition-all duration-300 group">
+            <div class="flex items-center justify-between mb-2">
+              <code class="text-green-400 font-mono text-sm bg-gray-800/50 px-3 py-1 rounded">/project list</code>
+              <button class="copy-btn opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-gray-400 hover:text-white" data-command="/project list">
+                <i class="fas fa-copy"></i>
+              </button>
+            </div>
+            <p class="text-gray-400 text-sm">Afficher tous les projets actifs du serveur</p>
+          </div>
+
+          <div class="bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg p-4 hover:bg-white/10 transition-all duration-300 group">
+            <div class="flex items-center justify-between mb-2">
+              <code class="text-green-400 font-mono text-sm bg-gray-800/50 px-3 py-1 rounded">/project status</code>
+              <button class="copy-btn opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-gray-400 hover:text-white" data-command="/project status [projet]">
+                <i class="fas fa-copy"></i>
+              </button>
+            </div>
+            <p class="text-gray-400 text-sm">Voir le statut détaillé d'un projet spécifique</p>
+          </div>
+
+          <div class="bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg p-4 hover:bg-white/10 transition-all duration-300 group">
+            <div class="flex items-center justify-between mb-2">
+              <code class="text-green-400 font-mono text-sm bg-gray-800/50 px-3 py-1 rounded">/project delete</code>
+              <button class="copy-btn opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-gray-400 hover:text-white" data-command="/project delete [projet]">
+                <i class="fas fa-copy"></i>
+              </button>
+            </div>
+            <p class="text-gray-400 text-sm">Supprimer un projet (réservé aux administrateurs)</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Task Management Commands -->
+      <div class="space-y-6">
+        <h3 class="text-2xl font-bold text-white mb-6 flex items-center">
+          <div class="w-8 h-8 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg flex items-center justify-center mr-3">
+            <i class="fas fa-tasks text-white text-sm"></i>
+          </div>
+          Gestion des Tâches
+        </h3>
+        
+        <div class="space-y-4">
+          <div class="bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg p-4 hover:bg-white/10 transition-all duration-300 group">
+            <div class="flex items-center justify-between mb-2">
+              <code class="text-purple-400 font-mono text-sm bg-gray-800/50 px-3 py-1 rounded">/task create</code>
+              <button class="copy-btn opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-gray-400 hover:text-white" data-command="/task create [titre] [description] [assigné] [deadline]">
+                <i class="fas fa-copy"></i>
+              </button>
+            </div>
+            <p class="text-gray-400 text-sm">Créer une nouvelle tâche avec assignation et deadline</p>
+          </div>
+
+          <div class="bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg p-4 hover:bg-white/10 transition-all duration-300 group">
+            <div class="flex items-center justify-between mb-2">
+              <code class="text-purple-400 font-mono text-sm bg-gray-800/50 px-3 py-1 rounded">/task list</code>
+              <button class="copy-btn opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-gray-400 hover:text-white" data-command="/task list [projet] [statut]">
+                <i class="fas fa-copy"></i>
+              </button>
+            </div>
+            <p class="text-gray-400 text-sm">Lister les tâches par projet ou statut</p>
+          </div>
+
+          <div class="bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg p-4 hover:bg-white/10 transition-all duration-300 group">
+            <div class="flex items-center justify-between mb-2">
+              <code class="text-purple-400 font-mono text-sm bg-gray-800/50 px-3 py-1 rounded">/task update</code>
+              <button class="copy-btn opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-gray-400 hover:text-white" data-command="/task update [id] [statut]">
+                <i class="fas fa-copy"></i>
+              </button>
+            </div>
+            <p class="text-gray-400 text-sm">Mettre à jour le statut d'une tâche</p>
+          </div>
+
+          <div class="bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg p-4 hover:bg-white/10 transition-all duration-300 group">
+            <div class="flex items-center justify-between mb-2">
+              <code class="text-purple-400 font-mono text-sm bg-gray-800/50 px-3 py-1 rounded">/task assign</code>
+              <button class="copy-btn opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-gray-400 hover:text-white" data-command="/task assign [id] [utilisateur]">
+                <i class="fas fa-copy"></i>
+              </button>
+            </div>
+            <p class="text-gray-400 text-sm">Assigner une tâche à un membre de l'équipe</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Team Management Commands -->
+      <div class="space-y-6">
+        <h3 class="text-2xl font-bold text-white mb-6 flex items-center">
+          <div class="w-8 h-8 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center mr-3">
+            <i class="fas fa-users text-white text-sm"></i>
+          </div>
+          Gestion d'Équipe
+        </h3>
+        
+        <div class="space-y-4">
+          <div class="bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg p-4 hover:bg-white/10 transition-all duration-300 group">
+            <div class="flex items-center justify-between mb-2">
+              <code class="text-green-400 font-mono text-sm bg-gray-800/50 px-3 py-1 rounded">/team add</code>
+              <button class="copy-btn opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-gray-400 hover:text-white" data-command="/team add [utilisateur] [projet] [rôle]">
+                <i class="fas fa-copy"></i>
+              </button>
+            </div>
+            <p class="text-gray-400 text-sm">Ajouter un membre à un projet avec un rôle</p>
+          </div>
+
+          <div class="bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg p-4 hover:bg-white/10 transition-all duration-300 group">
+            <div class="flex items-center justify-between mb-2">
+              <code class="text-green-400 font-mono text-sm bg-gray-800/50 px-3 py-1 rounded">/team remove</code>
+              <button class="copy-btn opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-gray-400 hover:text-white" data-command="/team remove [utilisateur] [projet]">
+                <i class="fas fa-copy"></i>
+              </button>
+            </div>
+            <p class="text-gray-400 text-sm">Retirer un membre d'un projet</p>
+          </div>
+
+          <div class="bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg p-4 hover:bg-white/10 transition-all duration-300 group">
+            <div class="flex items-center justify-between mb-2">
+              <code class="text-green-400 font-mono text-sm bg-gray-800/50 px-3 py-1 rounded">/team list</code>
+              <button class="copy-btn opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-gray-400 hover:text-white" data-command="/team list [projet]">
+                <i class="fas fa-copy"></i>
+              </button>
+            </div>
+            <p class="text-gray-400 text-sm">Afficher tous les membres d'un projet</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Analytics Commands -->
+      <div class="space-y-6">
+        <h3 class="text-2xl font-bold text-white mb-6 flex items-center">
+          <div class="w-8 h-8 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-lg flex items-center justify-center mr-3">
+            <i class="fas fa-chart-bar text-white text-sm"></i>
+          </div>
+          Analytics & Rapports
+        </h3>
+        
+        <div class="space-y-4">
+          <div class="bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg p-4 hover:bg-white/10 transition-all duration-300 group">
+            <div class="flex items-center justify-between mb-2">
+              <code class="text-yellow-400 font-mono text-sm bg-gray-800/50 px-3 py-1 rounded">/stats project</code>
+              <button class="copy-btn opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-gray-400 hover:text-white" data-command="/stats project [nom]">
+                <i class="fas fa-copy"></i>
+              </button>
+            </div>
+            <p class="text-gray-400 text-sm">Afficher les statistiques détaillées d'un projet</p>
+          </div>
+
+          <div class="bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg p-4 hover:bg-white/10 transition-all duration-300 group">
+            <div class="flex items-center justify-between mb-2">
+              <code class="text-yellow-400 font-mono text-sm bg-gray-800/50 px-3 py-1 rounded">/stats team</code>
+              <button class="copy-btn opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-gray-400 hover:text-white" data-command="/stats team [utilisateur]">
+                <i class="fas fa-copy"></i>
+              </button>
+            </div>
+            <p class="text-gray-400 text-sm">Voir les performances d'un membre de l'équipe</p>
+          </div>
+
+          <div class="bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg p-4 hover:bg-white/10 transition-all duration-300 group">
+            <div class="flex items-center justify-between mb-2">
+              <code class="text-yellow-400 font-mono text-sm bg-gray-800/50 px-3 py-1 rounded">/report weekly</code>
+              <button class="copy-btn opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-gray-400 hover:text-white" data-command="/report weekly [projet]">
+                <i class="fas fa-copy"></i>
+              </button>
+            </div>
+            <p class="text-gray-400 text-sm">Générer un rapport hebdomadaire du projet</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Usage example -->
+    <div class="mt-16 bg-gradient-to-r from-gray-800/50 to-gray-700/30 border border-gray-600/30 rounded-2xl p-8 backdrop-blur-sm">
+      <h3 class="text-2xl font-bold text-white mb-6 text-center">Exemple d'utilisation</h3>
+      <div class="max-w-4xl mx-auto">
+        <div class="bg-gray-900/50 rounded-lg p-6 font-mono text-sm">
+          <div class="flex items-center mb-4">
+            <div class="w-3 h-3 bg-red-500 rounded-full mr-2"></div>
+            <div class="w-3 h-3 bg-yellow-500 rounded-full mr-2"></div>
+            <div class="w-3 h-3 bg-green-500 rounded-full mr-2"></div>
+            <span class="text-gray-400 ml-2"># projet-général</span>
+          </div>
+          <div class="space-y-3">
+            <div class="flex items-start space-x-3">
+              <span class="text-blue-400">Utilisateur</span>
+              <span class="text-gray-300">/project create "Site Web" "Refonte complète du site"</span>
+            </div>
+            <div class="flex items-start space-x-3">
+              <span class="text-green-400">ProjectBot</span>
+              <span class="text-gray-300">✅ Projet "Site Web" créé avec succès!</span>
+            </div>
+            <div class="flex items-start space-x-3">
+              <span class="text-blue-400">Utilisateur</span>
+              <span class="text-gray-300">/task create "Design homepage" "Créer le design de la page d'accueil" @Designer "2024-01-15"</span>
+            </div>
+            <div class="flex items-start space-x-3">
+              <span class="text-green-400">ProjectBot</span>
+              <span class="text-gray-300">📋 Tâche assignée à @Designer avec deadline le 15/01/2024</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  // Copy command functionality
+  document.addEventListener('DOMContentLoaded', function() {
+    const copyButtons = document.querySelectorAll('.copy-btn');
+    
+    copyButtons.forEach(button => {
+      button.addEventListener('click', async () => {
+        const command = button.getAttribute('data-command');
+        if (!command) return;
+        
+        try {
+          await navigator.clipboard.writeText(command);
+          
+          // Visual feedback
+          const originalIcon = button.innerHTML;
+          button.innerHTML = '<i class="fas fa-check text-green-400"></i>';
+          button.classList.add('text-green-400');
+          
+          setTimeout(() => {
+            button.innerHTML = originalIcon;
+            button.classList.remove('text-green-400');
+          }, 2000);
+          
+        } catch (err) {
+          // Fallback for older browsers
+          const textArea = document.createElement('textarea');
+          textArea.value = command;
+          textArea.style.position = 'fixed';
+          textArea.style.left = '-999999px';
+          document.body.appendChild(textArea);
+          textArea.focus();
+          textArea.select();
+          
+          try {
+            document.execCommand('copy');
+            const originalIcon = button.innerHTML;
+            button.innerHTML = '<i class="fas fa-check text-green-400"></i>';
+            button.classList.add('text-green-400');
+            
+            setTimeout(() => {
+              button.innerHTML = originalIcon;
+              button.classList.remove('text-green-400');
+            }, 2000);
+          } catch (fallbackErr) {
+            console.error('Copy failed:', fallbackErr);
+          }
+          
+          document.body.removeChild(textArea);
+        }
+      });
+    });
+  });
+</script>

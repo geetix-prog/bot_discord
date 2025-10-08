@@ -1,0 +1,188 @@
+---
+// Navigation component for ProjectBot
+---
+
+<nav class="fixed top-0 left-0 right-0 z-40 bg-gray-900/80 backdrop-blur-md border-b border-gray-800/50 transition-all duration-300" id="navbar">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-16">
+      <!-- Logo -->
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+          <i class="fas fa-robot text-white text-lg"></i>
+        </div>
+        <span class="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+          ProjectBot
+        </span>
+      </div>
+
+      <!-- Desktop Navigation -->
+      <div class="hidden md:block">
+        <div class="flex items-center space-x-8">
+          <a href="#accueil" class="nav-link text-gray-300 hover:text-white transition-colors duration-200">
+            Accueil
+          </a>
+          <a href="#fonctionnalites" class="nav-link text-gray-300 hover:text-white transition-colors duration-200">
+            Fonctionnalités
+          </a>
+          <a href="#commandes" class="nav-link text-gray-300 hover:text-white transition-colors duration-200">
+            Commandes
+          </a>
+          <a href="#demo" class="nav-link text-gray-300 hover:text-white transition-colors duration-200">
+            Démo
+          </a>
+          <a href="#support" class="nav-link text-gray-300 hover:text-white transition-colors duration-200">
+            Support
+          </a>
+          <a 
+            href="https://discord.com/api/oauth2/authorize?client_id=YOUR_BOT_ID&permissions=8&scope=bot%20applications.commands" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            class="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-6 py-2 rounded-lg font-medium transition-all duration-200 transform hover:scale-105 flex items-center space-x-2"
+          >
+            <i class="fab fa-discord"></i>
+            <span>Ajouter le Bot</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Mobile menu button -->
+      <div class="md:hidden">
+        <button
+          id="mobile-menu-button"
+          type="button"
+          class="text-gray-300 hover:text-white focus:outline-none focus:text-white transition-colors duration-200"
+          aria-label="Menu mobile"
+          aria-expanded="false"
+        >
+          <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile Navigation Menu -->
+  <div id="mobile-menu" class="md:hidden hidden">
+    <div class="fixed inset-0 z-50 bg-gray-900/95 backdrop-blur-md">
+      <div class="flex flex-col items-center justify-center h-full space-y-8">
+        <button
+          id="mobile-menu-close"
+          type="button"
+          class="absolute top-4 right-4 text-gray-300 hover:text-white focus:outline-none focus:text-white transition-colors duration-200"
+          aria-label="Fermer le menu"
+        >
+          <svg class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+        
+        <a href="#accueil" class="mobile-nav-link text-2xl font-semibold text-gray-300 hover:text-white transition-colors duration-200">
+          Accueil
+        </a>
+        <a href="#fonctionnalites" class="mobile-nav-link text-2xl font-semibold text-gray-300 hover:text-white transition-colors duration-200">
+          Fonctionnalités
+        </a>
+        <a href="#commandes" class="mobile-nav-link text-2xl font-semibold text-gray-300 hover:text-white transition-colors duration-200">
+          Commandes
+        </a>
+        <a href="#demo" class="mobile-nav-link text-2xl font-semibold text-gray-300 hover:text-white transition-colors duration-200">
+          Démo
+        </a>
+        <a href="#support" class="mobile-nav-link text-2xl font-semibold text-gray-300 hover:text-white transition-colors duration-200">
+          Support
+        </a>
+        <a 
+          href="https://discord.com/api/oauth2/authorize?client_id=YOUR_BOT_ID&permissions=8&scope=bot%20applications.commands" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          class="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-8 py-3 rounded-lg font-medium transition-all duration-200 transform hover:scale-105 flex items-center space-x-2 text-lg"
+        >
+          <i class="fab fa-discord"></i>
+          <span>Ajouter le Bot</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<script>
+  // Mobile menu functionality
+  document.addEventListener('DOMContentLoaded', function() {
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const mobileMenuClose = document.getElementById('mobile-menu-close');
+    const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+
+    function openMobileMenu() {
+      mobileMenu?.classList.remove('hidden');
+      mobileMenuButton?.setAttribute('aria-expanded', 'true');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeMobileMenu() {
+      mobileMenu?.classList.add('hidden');
+      mobileMenuButton?.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+    }
+
+    mobileMenuButton?.addEventListener('click', openMobileMenu);
+    mobileMenuClose?.addEventListener('click', closeMobileMenu);
+
+    // Close menu when clicking on nav links
+    mobileNavLinks.forEach(link => {
+      link.addEventListener('click', closeMobileMenu);
+    });
+
+    // Close menu when pressing escape
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !mobileMenu?.classList.contains('hidden')) {
+        closeMobileMenu();
+      }
+    });
+
+    // Smooth scrolling for navigation links
+    document.querySelectorAll('.nav-link, .mobile-nav-link').forEach(link => {
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        const targetId = this.getAttribute('href')?.substring(1);
+        const targetElement = document.getElementById(targetId || '');
+        
+        if (targetElement) {
+          const offsetTop = targetElement.offsetTop - 80; // Account for fixed navbar
+          window.scrollTo({
+            top: offsetTop,
+            behavior: 'smooth'
+          });
+        }
+      });
+    });
+
+    // Navbar scroll effect
+    let lastScrollY = window.scrollY;
+    
+    window.addEventListener('scroll', () => {
+      const currentScrollY = window.scrollY;
+      const navbar = document.getElementById('navbar');
+      
+      if (navbar) {
+        if (currentScrollY > 100) {
+          navbar.classList.add('bg-gray-900/95');
+          navbar.classList.remove('bg-gray-900/80');
+        } else {
+          navbar.classList.add('bg-gray-900/80');
+          navbar.classList.remove('bg-gray-900/95');
+        }
+        
+        // Hide/show navbar based on scroll direction
+        if (currentScrollY > lastScrollY && currentScrollY > 200) {
+          navbar.style.transform = 'translateY(-100%)';
+        } else {
+          navbar.style.transform = 'translateY(0)';
+        }
+      }
+      
+      lastScrollY = currentScrollY;
+    }, { passive: true });
+  });
+</script>

@@ -1,0 +1,154 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navigation from '../components/Navigation.astro';
+import Hero from '../components/Hero.astro';
+import Features from '../components/Features.astro';
+import Commands from '../components/Commands.astro';
+---
+
+<Layout title="ProjectBot - Bot Discord de Gestion de Projet | Organisez vos équipes">
+  <Navigation />
+  <main id="main-content">
+    <Hero />
+    <Features />
+    <Commands />
+    
+    <!-- Demo section placeholder -->
+    <section id="demo" class="py-20 bg-gray-900">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h2 class="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-pink-400 to-red-400 bg-clip-text text-transparent">
+          Voir ProjectBot en Action
+        </h2>
+        <p class="text-xl text-gray-400 max-w-3xl mx-auto mb-12">
+          Découvrez comment ProjectBot transforme la gestion de projets sur Discord
+        </p>
+        
+        <div class="bg-gray-800/50 rounded-2xl p-8 max-w-4xl mx-auto backdrop-blur-sm border border-gray-700/50">
+          <div class="aspect-video bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-xl flex items-center justify-center">
+            <div class="text-center">
+              <i class="fas fa-play-circle text-6xl text-blue-400 mb-4"></i>
+              <p class="text-gray-300 text-lg">Démo vidéo à venir</p>
+              <p class="text-gray-500 text-sm">Découvrez toutes les fonctionnalités en action</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Support section -->
+    <section id="support" class="py-20 bg-gray-800/30">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+          <h2 class="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-green-400 to-teal-400 bg-clip-text text-transparent">
+            Support & Communauté
+          </h2>
+          <p class="text-xl text-gray-400 max-w-3xl mx-auto">
+            Besoin d'aide ? Notre communauté et notre équipe sont là pour vous accompagner
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div class="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-8 text-center hover:bg-white/10 transition-all duration-300">
+            <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center mb-6 mx-auto">
+              <i class="fab fa-discord text-white text-2xl"></i>
+            </div>
+            <h3 class="text-xl font-semibold text-white mb-4">Serveur Discord</h3>
+            <p class="text-gray-400 mb-6">Rejoignez notre communauté pour obtenir de l'aide et partager vos expériences</p>
+            <a href="#" class="inline-flex items-center text-blue-400 hover:text-blue-300 transition-colors duration-200">
+              Rejoindre <i class="fas fa-external-link-alt ml-2"></i>
+            </a>
+          </div>
+
+          <div class="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-8 text-center hover:bg-white/10 transition-all duration-300">
+            <div class="w-16 h-16 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center mb-6 mx-auto">
+              <i class="fas fa-book text-white text-2xl"></i>
+            </div>
+            <h3 class="text-xl font-semibold text-white mb-4">Documentation</h3>
+            <p class="text-gray-400 mb-6">Consultez notre guide complet pour maîtriser toutes les fonctionnalités</p>
+            <a href="#" class="inline-flex items-center text-green-400 hover:text-green-300 transition-colors duration-200">
+              Lire les docs <i class="fas fa-external-link-alt ml-2"></i>
+            </a>
+          </div>
+
+          <div class="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-8 text-center hover:bg-white/10 transition-all duration-300">
+            <div class="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center mb-6 mx-auto">
+              <i class="fab fa-github text-white text-2xl"></i>
+            </div>
+            <h3 class="text-xl font-semibold text-white mb-4">Open Source</h3>
+            <p class="text-gray-400 mb-6">Contribuez au projet et signalez des bugs sur notre repository GitHub</p>
+            <a href="#" class="inline-flex items-center text-purple-400 hover:text-purple-300 transition-colors duration-200">
+              Voir le code <i class="fas fa-external-link-alt ml-2"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 border-t border-gray-800">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+          <div class="md:col-span-2">
+            <div class="flex items-center space-x-3 mb-4">
+              <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                <i class="fas fa-robot text-white text-lg"></i>
+              </div>
+              <span class="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                ProjectBot
+              </span>
+            </div>
+            <p class="text-gray-400 mb-6 max-w-md">
+              Révolutionnez la gestion de projets sur Discord avec ProjectBot. 
+              Simple, puissant et entièrement gratuit.
+            </p>
+            <div class="flex space-x-4">
+              <a href="#" class="text-gray-400 hover:text-white transition-colors duration-200">
+                <i class="fab fa-discord text-xl"></i>
+              </a>
+              <a href="#" class="text-gray-400 hover:text-white transition-colors duration-200">
+                <i class="fab fa-github text-xl"></i>
+              </a>
+              <a href="#" class="text-gray-400 hover:text-white transition-colors duration-200">
+                <i class="fab fa-twitter text-xl"></i>
+              </a>
+            </div>
+          </div>
+
+          <div>
+            <h4 class="text-white font-semibold mb-4">Produit</h4>
+            <ul class="space-y-2">
+              <li><a href="#fonctionnalites" class="text-gray-400 hover:text-white transition-colors duration-200">Fonctionnalités</a></li>
+              <li><a href="#commandes" class="text-gray-400 hover:text-white transition-colors duration-200">Commandes</a></li>
+              <li><a href="#demo" class="text-gray-400 hover:text-white transition-colors duration-200">Démo</a></li>
+              <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-200">Changelog</a></li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="text-white font-semibold mb-4">Support</h4>
+            <ul class="space-y-2">
+              <li><a href="#support" class="text-gray-400 hover:text-white transition-colors duration-200">Centre d'aide</a></li>
+              <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-200">Documentation</a></li>
+              <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-200">Contact</a></li>
+              <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-200">Statut</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="border-t border-gray-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
+          <p class="text-gray-400 text-sm">
+            © 2024 ProjectBot. Tous droits réservés.
+          </p>
+          <div class="flex space-x-6 mt-4 md:mt-0">
+            <a href="#" class="text-gray-400 hover:text-white transition-colors duration-200 text-sm">
+              Politique de confidentialité
+            </a>
+            <a href="#" class="text-gray-400 hover:text-white transition-colors duration-200 text-sm">
+              Conditions d'utilisation
+            </a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </main>
+</Layout>
